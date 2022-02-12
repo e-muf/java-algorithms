@@ -1,18 +1,8 @@
-## Getting Started
+## Fibonacci Algorithm
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+In this project there are four approaches of fibanacci algorithms:
 
-## Folder Structure
-
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+1. Recursive Fibonacci, following the equation fib(n - 1) + fib(n - 2), it results in a simple code but with low efficiency.
+2. Recursive Fibonacci with memoization, using a Map data structure to store previous calculated results.
+3. Sequential Fibonacci, this is the more efficient approach, however the code is more complex than the previous.
+4. Generate Fibonacci sequence with a stream, it uses the sequential fibonacci algorithm, but using a stream to print each value of the sequence.
