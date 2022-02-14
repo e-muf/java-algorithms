@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 import java.util.function.Function;
@@ -92,6 +94,34 @@ public class GenericSearch {
       }
     }
     return null;
+  }
+
+  public static <T> Node<T> bfs(T initial, Predicate<T> goalTest, Function<T, List<T>> successors) {
+    // frontier is where we've yet to go
+    Queue<Node<T>> frontier = new LinkedList<>();
+    frontier.offer(new Node<>(initial, null));
+    // expored is where we've been
+    Set<T> explored = new HashSet<>();
+    explored.add(initial);
+
+    // keep going while there is more to explore
+    while (!frontier.isEmpty()) {
+      Node<T> currentNode = frontier.poll();
+      T currentState = currentNode.state;
+      // if we found the goal, we're done
+      if (goalTest.test(currentState)) {
+        return currentNode;
+      }
+      // check where we can go next and haven't explored
+      for (T child : successors.apply(currentState)) {
+        if (explored.contains(child)) {
+          continue;
+        }
+        explored.add(child);
+        frontier.offer(new Node<>(child, currentNode));
+      }
+    }
+    return null; // went through everything and never found a goal
   }
 
   public static <T> List<T> nodeToPath(Node<T> node) {

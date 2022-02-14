@@ -160,5 +160,16 @@ public class Maze {
       System.out.println(m);
       m.clear(path1);
     }
+
+    GenericSearch.Node<MazeLocation> solution2 = GenericSearch
+      .bfs(m.start, m::goalTest, m::successors);
+    if (solution2 == null) {
+      System.out.println("No solution found using breadth-first search!");
+    } else {
+      List<MazeLocation> path2 = GenericSearch.nodeToPath(solution2);
+      m.mark(path2);
+      System.out.println(m);
+      m.clear(path2);
+    }
   }
 }
