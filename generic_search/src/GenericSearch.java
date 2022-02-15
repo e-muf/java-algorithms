@@ -1,12 +1,16 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.ToDoubleFunction;
 
 public class GenericSearch {
   public static class Node<T> implements Comparable<Node<T>> {
@@ -122,6 +126,35 @@ public class GenericSearch {
       }
     }
     return null; // went through everything and never found a goal
+  }
+
+  public static <T> Node<T> astar(T initial, Predicate<T> goalTest, 
+    Function<T, List<T>> successors, ToDoubleFunction<T> heuristic) {
+      // frontier is where we've yet to go
+      PriorityQueue<Node<T>> frontier = new PriorityQueue<>();
+      frontier.offer(new Node<T>(initial, null, 0.0, heuristic.applyAsDouble(initial)));
+      // explored is where we've been
+      Map<T, Double> explored = new HashMap<>();
+      explored.put(initial, 0.0);
+      // keep going while there is more to explore
+      while (!frontier.isEmpty()) {
+        Node<T> currentNode = frontier.poll();
+        T currentState = currentNode.state;
+        // if we found the goal, we're done
+        if (goalTest.test(currentState)) {
+          return currentNode;
+        }
+        // check where we can go next and haven't explored
+        for (T child : successors.apply(currentState)) {
+          // 1 here assumes a grid, need a cost function for more sophisticated apps
+          double newCost = currentNode.cost + 1;
+          if (!explored.containsKey(child) || explored.get(child) > newCost) {
+            explored.put(child, newCost);
+            frontier.offer(new Node<T>(child, currentNode, newCost, heuristic.applyAsDouble(child)));
+          }
+        }
+      }
+      return null; // went through everything and never found a goal
   }
 
   public static <T> List<T> nodeToPath(Node<T> node) {

@@ -117,6 +117,18 @@ public class Maze {
     return locations;
   }
 
+  public double euclidianDistance(MazeLocation ml) {
+    int xdist = ml.column - goal.column;
+    int ydist = ml.row - goal.row;
+    return Math.sqrt((xdist * xdist) + (ydist * ydist));
+  }
+
+  public double manhattanDistance(MazeLocation ml) {
+    int xdist = Math.abs(ml.column - goal.column);
+    int ydist = Math.abs(ml.row - goal.row);
+    return (xdist + ydist);
+  }
+
   public void mark(List<MazeLocation> path) {
     for (MazeLocation ml : path) {
       grid[ml.row][ml.column] = Cell.PATH;
@@ -170,6 +182,17 @@ public class Maze {
       m.mark(path2);
       System.out.println(m);
       m.clear(path2);
+    }
+
+    GenericSearch.Node<MazeLocation> solution3 = GenericSearch
+      .astar(m.start, m::goalTest, m::successors, m::manhattanDistance);
+    if (solution3 == null) {
+      System.out.println("No solution found using A*!");
+    } else {
+      List<MazeLocation> path3 = GenericSearch.nodeToPath(solution3);
+      m.mark(path3);
+      System.out.println(m);
+      m.clear(path3);
     }
   }
 }
